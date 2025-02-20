@@ -1,0 +1,11 @@
+# Neural Network Model Dependencies
+pytorch
+
+# Core Python Libraries
+numpy
+
+# Visualization Tools
+tensorboard
+matplotlib
+
+gymnasium
