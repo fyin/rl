@@ -22,4 +22,3 @@ def plot_durations(show_result=False, episode_durations=[]):
         plt.plot(means.numpy())
 
     plt.pause(0.001)  # pause a bit so that plots are updated
-    plt.show()
