@@ -16,6 +16,8 @@ All the required dependencies are put in requirements.txt.
 * Run script directly, `python3 -m dqn.inference` or just run inference.py script in your IDE.
 
 ## References
+* https://spinningup.openai.com/en/latest/spinningup/rl_intro.html
+* https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html
 * https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
-* [Deep Q-Network (DQN)](https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf)
-* [OpenAI Gym](https://gym.openai.com/)
+* https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf
+* https://gym.openai.com/
