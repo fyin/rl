@@ -30,7 +30,7 @@ class ReplayMemory(object):
         return len(self.memory)
 
 def optimize_model(config: dict, device, relay_memory: ReplayMemory, policy_net: DQN, target_net: DQN, optimizer):
-    batch_size = config.get("batch_size")
+    batch_size = int(config.get("batch_size"))
 
     if len(relay_memory) < batch_size:
         return
@@ -53,7 +53,7 @@ def optimize_model(config: dict, device, relay_memory: ReplayMemory, policy_net:
     next_state_values = torch.zeros(batch_size, device=device)
     with torch.no_grad():
         next_state_values[non_final_mask] = target_net(non_final_next_states).max(1).values
-    expected_state_action_values = (next_state_values * config.get("gamma")) + reward_batch
+    expected_state_action_values = (next_state_values * float(config.get("gamma"))) + reward_batch
 
     # Compute Huber loss
     criterion = nn.SmoothL1Loss()
@@ -91,11 +91,11 @@ def train(config:dict, device):
     target_net = DQN(n_observations, n_actions).to(device)
     target_net.load_state_dict(policy_net.state_dict())
 
-    optimizer = optim.AdamW(policy_net.parameters(), lr=config.get("learning_rate"), amsgrad=True)
-    relay_memory = ReplayMemory(config.get("replay_buffer_size"))
+    optimizer = optim.AdamW(policy_net.parameters(), lr=float(config.get("learning_rate")), amsgrad=True)
+    relay_memory = ReplayMemory(int(config.get("replay_buffer_size")))
 
     episode_durations = []
-    for i_episode in range(config.get("num_episodes")):
+    for i_episode in range(int(config.get("num_episodes"))):
         steps_done = 0
         # Initialize the environment and get its state
         state, info = env.reset()
@@ -121,7 +121,7 @@ def train(config:dict, device):
             # θ′ ← τ θ + (1 −τ )θ′
             target_net_state_dict = target_net.state_dict()
             policy_net_state_dict = policy_net.state_dict()
-            tau = config.get("tau")
+            tau = float(config.get("tau"))
             for key in policy_net_state_dict:
                 target_net_state_dict[key] = policy_net_state_dict[key] * tau + target_net_state_dict[key] * (1 - tau)
             target_net.load_state_dict(target_net_state_dict)
