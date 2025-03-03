@@ -18,6 +18,7 @@ All the required dependencies are put in requirements.txt.
 ## References
 * https://spinningup.openai.com/en/latest/spinningup/rl_intro.html
 * https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html
+* https://huggingface.co/learn/deep-rl-course/unit2/introduction
 * https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
 * https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf
 * https://gym.openai.com/

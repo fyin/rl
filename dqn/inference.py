@@ -9,7 +9,7 @@ def inference(config:dict, device):
     env = gym.make("CartPole-v1")
     n_actions = env.action_space.n
     state, info = env.reset()
-    print(f"state shape: {state.shape}, state type: {type(state)}, state: {state}")
+    print(f"state dim: {len(state)}, state shape: {state}, state type: {type(state)}, state: {state}")
     n_observations = len(state)
     policy_net = DQN(n_observations, n_actions).to(device)
     policy_net.load_state_dict(torch.load(config["model_path"]+"/best_model.pth",  map_location=device, weights_only=True))
