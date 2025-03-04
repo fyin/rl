@@ -1,5 +1,5 @@
 # Policy Gradient method
-A practical for policy gradient implementation, training, and inference for the CartPole-v1 environment.
+A practical for policy gradient implementation, training, and evaluation for the CartPole-v1 environment.
 
 ## Dependency Management
 Use [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html) to manage the environment and 3rd party libraries.
