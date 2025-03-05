@@ -9,13 +9,15 @@ import torch
 from torch import optim
 
 from policy_gradient.config import cartpole_hyperparameters
-from policy_gradient.evaluate import evaluate_policy, record_video
 from policy_gradient.model import Policy
+from policy_gradient.visualizer import plot_durations
 
 
 def train_policy(policy, optimizer, n_training_episodes, max_steps, gamma, env, device):
     scores = []
-    for i_episode in range(1, n_training_episodes + 1):
+    episode_durations = []
+    os.makedirs(cartpole_hyperparameters["checkpoint_path"], exist_ok=True)
+    for i_episode in range(n_training_episodes):
         log_probs = []
         rewards = []
         state = env.reset()
@@ -24,7 +26,11 @@ def train_policy(policy, optimizer, n_training_episodes, max_steps, gamma, env, 
             log_probs.append(log_prob)
             new_state, reward, terminated, truncated, _ = env.step(action)
             rewards.append(reward)
-            if terminated:
+            done = terminated or truncated
+            if done:
+                episode_durations.append(step + 1)
+                last_episode = i_episode == n_training_episodes - 1
+                plot_durations(True, episode_durations, last_episode)
                 break
         scores.append(sum(rewards))
 
@@ -51,6 +57,12 @@ def train_policy(policy, optimizer, n_training_episodes, max_steps, gamma, env, 
         policy_loss.backward()
         optimizer.step()
 
+        if i_episode % 200 == 0:
+            checkpoint_path = f"{cartpole_hyperparameters['checkpoint_path']}/checkpoint_{i_episode}.pth"
+            torch.save(policy.state_dict(), checkpoint_path)
+
+    checkpoint_path = f"{cartpole_hyperparameters['checkpoint_path']}/checkpoint_last.pth"
+    torch.save(policy.state_dict(), checkpoint_path)
     return scores
 
 if __name__ == "__main__":
@@ -76,14 +88,3 @@ if __name__ == "__main__":
         env,
         device
     )
-
-    mean_reward, std_reward = evaluate_policy(
-        env, cartpole_hyperparameters["max_steps_per_episode"],
-        cartpole_hyperparameters["n_evaluation_episodes"],
-        cartpole_policy,
-        device
-    )
-    print(f"Mean reward: {mean_reward:.2f} +/- {std_reward:.2f}")
-    out_directory = cartpole_hyperparameters["output_dir"]
-    os.makedirs(out_directory, exist_ok=True)
-    record_video(env, cartpole_policy, out_directory + "/cartpole.gif", device, fps=30)
