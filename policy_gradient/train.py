@@ -10,32 +10,27 @@ from torch import optim
 
 from policy_gradient.config import cartpole_hyperparameters
 from policy_gradient.model import Policy
-from policy_gradient.visualizer import plot_durations
+from policy_gradient.visualizer import plot_score
 
 
-def train_policy(policy, optimizer, n_training_episodes, max_steps, gamma, env, device):
+def train_policy(policy, optimizer, n_training_episodes,gamma, env, device):
     scores = []
-    episode_durations = []
     os.makedirs(cartpole_hyperparameters["checkpoint_path"], exist_ok=True)
     for i_episode in range(n_training_episodes):
         log_probs = []
         rewards = []
         state = env.reset()
-        for step in range(max_steps):
+        done = False
+
+        while not done:
             action, log_prob = policy.act(state, device, True)
             log_probs.append(log_prob)
             new_state, reward, terminated, truncated, _ = env.step(action)
             rewards.append(reward)
             done = terminated or truncated
-            if done:
-                episode_durations.append(step + 1)
-                last_episode = i_episode == n_training_episodes - 1
-                plot_durations(True, episode_durations, last_episode)
-                break
         scores.append(sum(rewards))
-
-        returns = deque(maxlen=max_steps)
         n_steps = len(rewards)
+        returns = deque(maxlen=n_steps)
         # Compute the discounted returns at each timestep,
         # G_(t-1) = r_t + gamma*r_(t+1) + gamma*gamma*r_(t+2) + ...
         for step in range(n_steps)[::-1]:
@@ -83,8 +78,9 @@ if __name__ == "__main__":
         cartpole_policy,
         cartpole_optimizer,
         cartpole_hyperparameters["n_training_episodes"],
-        cartpole_hyperparameters["max_steps_per_episode"],
         cartpole_hyperparameters["gamma"],
         env,
         device
     )
+
+    plot_score(scores,  "Policy Gradient Training Result")
