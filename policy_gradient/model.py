@@ -27,6 +27,6 @@ class Policy(nn.Module):
             # This could lead to premature convergence and suboptimal policies because the agent might not explore better actions.
             action = m.sample()
         else:
-            # Use deterministic action selection for evaluation.
+            # Use deterministic action selection for evaluation and inference
             action = torch.argmax(probs)
         return action.item(), m.log_prob(action)
