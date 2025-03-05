@@ -13,4 +13,4 @@ All the required dependencies are put in requirements.txt.
 * Run script directly, `python3 -m policy_gradient.train` or just run train.py script in your IDE.
 
 ## References
-* https://huggingface.co/learn/deep-rl-course/unit4/introduction
+* https://huggingface.co/learn/deep-rl-course/unit4/hands-on
