@@ -1,6 +1,5 @@
 import math
 import os
-from itertools import count
 
 import gymnasium as gym
 
@@ -8,13 +7,12 @@ import random
 from collections import deque, namedtuple
 
 import torch
-from matplotlib import pyplot as plt
 from torch import nn, optim
 from torch.utils.tensorboard import SummaryWriter
 
 from dqn.config import get_config
 from model import DQN
-from visualizer import plot_durations
+from visualizer import plot_score
 
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
@@ -83,7 +81,7 @@ def select_action(config:dict, state, policy_net: DQN, steps_done, device, env:g
     else:
         return torch.tensor([[env.action_space.sample()]], device=device, dtype=torch.long)
 
-def train(config:dict, device):
+def train_dqn(config:dict, device):
     env = gym.make("CartPole-v1")
     n_actions = env.action_space.n
     state, info = env.reset()
@@ -99,16 +97,16 @@ def train(config:dict, device):
     relay_memory = ReplayMemory(int(config["replay_buffer_size"]))
     writer = SummaryWriter(config['tensorboard_path'])
     os.makedirs(config["model_path"], exist_ok=True)
-    best_avg_reward = -float("inf")
 
-    episode_durations = []
+    scores = []
     for i_episode in range(int(config["num_episodes"])):
         steps_done = 0
         total_reward = 0
         # Initialize the environment and get its state
         state, info = env.reset()
         state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0)
-        for step in count():
+        done = False
+        while not done:
             action = select_action(config, state, policy_net,steps_done, device, env)
             steps_done += 1
             observation, reward, terminated, truncated, _ = env.step(action.item())
@@ -135,34 +133,23 @@ def train(config:dict, device):
                 target_net_state_dict[key] = policy_net_state_dict[key] * tau + target_net_state_dict[key] * (1 - tau)
             target_net.load_state_dict(target_net_state_dict)
 
-            if done:
-                episode_durations.append(step + 1)
-                plot_durations(True, episode_durations)
-                break
-
+        scores.append(total_reward)
         writer.add_scalar('Reward', total_reward, i_episode)
         writer.flush()
         if i_episode % 100 == 0:
             checkpoint_path = f"{config['model_path']}/checkpoint_{i_episode}.pth"
             torch.save(policy_net.state_dict(), checkpoint_path)
 
-            # Save the best-performing model
-        avg_reward = total_reward  # (Use a moving average for better stability)
-        if avg_reward > best_avg_reward:
-            best_avg_reward = avg_reward
-            best_model_path = f"{config['model_path']}/best_model.pth"
-            torch.save(policy_net.state_dict(), best_model_path)
-
     # Save final model
     final_model_path = f"{config['model_path']}/final_model.pth"
     torch.save(policy_net.state_dict(), final_model_path)
     print(f"Final model saved at {final_model_path}")
-
     env.close()
+    return scores
 
 if __name__ == "__main__":
     config = get_config()
     device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_built() or torch.backends.mps.is_available() else "cpu"
     print("Using device:", device)
-    train(config, device)
-    plt.show()
+    scores =train_dqn(config, device)
+    plot_score(scores, "DQN Training Result", "dqn_train_result.png")

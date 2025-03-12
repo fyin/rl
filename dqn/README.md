@@ -11,6 +11,7 @@ All the required dependencies are put in requirements.txt.
 
 ## Training
 * Run script directly, `python3 -m dqn.train` or just run train.py script in your IDE.
+* ![One training run result](./dqn_train_result.png)
 
 ## Inference
 * Run script directly, `python3 -m dqn.inference` or just run inference.py script in your IDE.

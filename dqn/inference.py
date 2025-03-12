@@ -12,7 +12,7 @@ def inference(config:dict, device):
     print(f"state dim: {len(state)}, state shape: {state}, state type: {type(state)}, state: {state}")
     n_observations = len(state)
     policy_net = DQN(n_observations, n_actions).to(device)
-    policy_net.load_state_dict(torch.load(config["model_path"]+"/best_model.pth",  map_location=device, weights_only=True))
+    policy_net.load_state_dict(torch.load(config["model_path"]+"/final_model.pth",  map_location=device, weights_only=True))
     policy_net.eval()  # Set model to evaluation mode
 
     done = False
