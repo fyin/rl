@@ -2,10 +2,9 @@ import matplotlib.pyplot as plt
 import torch
 
 """
-Visualize total accumulated scores over training episodes. 
-This helps analyze how well the agent is learning over time(longer durations → better policy). 
+Visualize total accumulated scores over training episodes. This helps analyze how well the agent is learning over time(longer durations → better policy). 
 """
-def plot_score(episode_scores=[], title="Result", save_path=None):
+def plot_score(episode_scores=[], title="Result"):
     plt.figure(1)
     scores_tensor = torch.tensor(episode_scores, dtype=torch.float)
     plt.title(title)
@@ -19,5 +18,5 @@ def plot_score(episode_scores=[], title="Result", save_path=None):
         plt.plot(means.numpy())
 
     plt.pause(0.001)  # pause a bit so that plots are updated
-    plt.savefig(save_path)
+    plt.savefig("pg_train_result.png")
     plt.show()
