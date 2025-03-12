@@ -4,6 +4,7 @@ from torch.distributions import Categorical
 class Agent(nn.Module):
     def __init__(self, obs_dim, action_dim, hidden_dim=128):
         super().__init__()
+        # Output layer outputs one value for the given state, which is used for GAE estimation
         self.critic = nn.Sequential(
             nn.Linear(obs_dim, hidden_dim),
             nn.Tanh(),
@@ -11,6 +12,8 @@ class Agent(nn.Module):
             nn.Tanh(),
             nn.Linear(hidden_dim, 1)
         )
+
+        # Output layer outputs probabilities for each action
         self.actor = nn.Sequential(
             nn.Linear(obs_dim, hidden_dim),
             nn.Tanh(),
