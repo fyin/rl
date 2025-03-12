@@ -66,7 +66,6 @@ def train_ppo_agent(config:dict, device):
         for _ in range(epochs):
             indices = np.random.permutation(len(transition_buffer))
             for i in range(0, len(transition_buffer), batch_size):
-                optimizer.zero_grad()
                 batch_idx = indices[i:i + batch_size]
 
                 batch_states = states[batch_idx]
@@ -87,6 +86,7 @@ def train_ppo_agent(config:dict, device):
                 # Total loss
                 loss = policy_loss + 0.5 * value_loss - 0.01 * entropy.mean()
 
+                optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
 
