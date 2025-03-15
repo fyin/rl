@@ -9,6 +9,6 @@ def get_config():
         "tau": 5e-3,
         "gamma": 0.99,
         "num_episodes": 1_000,
-        "tensorboard_path": "run/dqn_tensorboard",
+        "tensorboard_path": "runs/dqn_tensorboard",
         "model_path": "model/dqn_model"
     }
