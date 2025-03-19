@@ -30,14 +30,16 @@ class ReplayMemory(object):
     def __len__(self):
         return len(self.memory)
 
-def optimize_model(config: dict, device, relay_memory: ReplayMemory, policy_net: DQN, target_net: DQN, optimizer):
+def optimize_dqn(config: dict, device, relay_memory: ReplayMemory, policy_net: DQN, target_net: DQN, optimizer):
     batch_size = int(config["batch_size"])
 
     if len(relay_memory) < batch_size:
         return
     transitions = relay_memory.sample(batch_size)
-    # zip(*transitions) unzips the list of tuples into four separate lists (states, actions, next_states, rewards).
-    # Transition(*zip(*transitions)) reconstructs them back into a Transition object batch containing lists of each component.
+    # zip(*transitions) unzips the list of Transition tuples into four separate lists (states, actions, next_states, rewards).
+    # Transition(*zip(*transitions)) reconstructs them back into a Transition object, each element containing a list of separate elements.
+    # Ex: Transition(s1, a1, s1', r1), Transition(s2, a2, s2', r2), Transition(s3, a3, s3', r3)
+    # Transition(*zip(*transitions)): Transition(states = [s1, s2, s3], actions = [a1, a2, a3], next_states = [s1', s2', s3'], rewards = [r1, r2, r3])
     batch = Transition(*zip(*transitions))
 
     # final state is the one where the agent terminates the episode due to reaching a terminal state,
@@ -56,7 +58,7 @@ def optimize_model(config: dict, device, relay_memory: ReplayMemory, policy_net:
         next_state_values[non_final_mask] = target_net(non_final_next_states).max(1).values
     expected_state_action_values = (next_state_values * float(config["gamma"])) + reward_batch
 
-    # Compute Huber loss
+    # Use Huber loss to compute the loss to stabilize learning when minimizing TD error
     criterion = nn.SmoothL1Loss()
     loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
 
@@ -88,7 +90,8 @@ def train_dqn(config:dict, device):
     n_observations = len(state)
 
     # Policy network: Main network in DQN, update every training step using gradient descent, calculate Q(s,a) and used for action selection.
-    # Target network: Copy of the policy network, used to stabilize Q-value targets in the loss function. Its weights are updated at a slower rate or via soft updates.
+    # Target network: Copy of the policy network, used to stabilize Q-value targets in the loss function.
+    # Its weights are updated at a slower rate or via soft updates.
     policy_net = DQN(n_observations, n_actions).to(device)
     target_net = DQN(n_observations, n_actions).to(device)
     target_net.load_state_dict(policy_net.state_dict())
@@ -122,9 +125,9 @@ def train_dqn(config:dict, device):
             relay_memory.push(state, action, next_state, reward)
             state = next_state
             # Perform optimization on the policy network
-            optimize_model(config, device, relay_memory, policy_net, target_net, optimizer)
+            optimize_dqn(config, device, relay_memory, policy_net, target_net, optimizer)
 
-            # Soft update of the target network's weights
+            # Soft update the target network's weights using parameters from the policy network
             # θ′ ← τ θ + (1 −τ )θ′
             target_net_state_dict = target_net.state_dict()
             policy_net_state_dict = policy_net.state_dict()

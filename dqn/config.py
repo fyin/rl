@@ -8,7 +8,7 @@ def get_config():
         "epsilon_decay": 1_000,
         "tau": 5e-3,
         "gamma": 0.99,
-        "num_episodes": 1_000,
+        "num_episodes": 40_000,
         "tensorboard_path": "run/dqn_tensorboard",
         "model_path": "model/dqn_model"
     }
