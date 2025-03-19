@@ -90,7 +90,7 @@ def train_ppo_agent(config:dict, device):
                 loss.backward()
                 optimizer.step()
 
-        print(f"Loss: {loss.item()}")
+        print(f"update: {update}, Loss: {loss.item()}")
 
     env.close()
     return scores

@@ -11,6 +11,6 @@ All the required dependencies are put in requirements.txt.
 
 ## Training
 * Run script directly, `python3 -m actor_critic.train` or just run train.py script in your IDE.
-
+* ![One training run result](./ppo_train_result.png)
 ## References
 * https://huggingface.co/learn/deep-rl-course/unit8/hands-on-cleanrl
