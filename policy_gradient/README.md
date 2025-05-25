@@ -1,7 +1,7 @@
 # Policy Gradient method
 A practical for policy gradient implementation, training, and evaluation for the CartPole-v1 environment.
 
-Unlike value-based methods that estimate the value of states or actions, policy Gradient methods are policy-based RL approaches that directly optimize the policy—a mapping from states to actions—by adjusting its parameters (e.g., neural network weights) to maximize expected rewards.
+Unlike value-based methods that estimate the reward obtained by taking an action given a state, policy Gradient methods are policy-based RL approaches that directly optimize the policy network (a mapping from states to actions) by adjusting its parameters (e.g., neural network weights) to maximize expected rewards.
 
 ## Dependency Management
 Use [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html) to manage the environment and 3rd party libraries.
@@ -13,10 +13,8 @@ All the required dependencies are put in requirements.txt.
 
 ## Training
 * Components
-  * Policy: A policy defines how an agent chooses actions given its observations of the environment. It can be represented as a probability distribution over actions, given a state. 
-  * Policy Gradient: The gradient provides information about the direction and magnitude of change needed to optimize the policy parameters. 
-  * Expected Cumulative Reward: The goal of policy gradient methods is to maximize the expected cumulative reward over the agent's future interactions with the environment. 
-  * Policy Gradient Methods: These algorithms leverage the policy gradient to update the policy parameters, typically using techniques like gradient ascent.
+  * Policy network: Takes a state and outputs a probability distribution over actions. 
+  * Policy Gradient: Provides information about the direction and magnitude of change needed to optimize the policy parameters. Its goal is to maximize the expected cumulative reward over the agent's future interactions with the environment.
 
 * Train Script Run
   * Run script directly, `python3 -m policy_gradient.train` or just run train.py script in your IDE.
