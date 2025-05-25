@@ -1,4 +1,4 @@
-# reinforcement learning (RL)
+# Reinforcement Learning (RL)
 
 ## Packages
 * [dqn](./dqn/README.md)
