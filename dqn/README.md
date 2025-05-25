@@ -13,9 +13,9 @@ All the required dependencies are put in requirements.txt.
 
 ## Training
 * Components
-  * Training Neural Network: A deep neural network approximates Q(s, a), taking state s as input and outputting Q-values for all possible actions, where Q-value is the expected future cumulative reward the agent will receive by taking action 'a' in state 's' and following the optimal policy from that point on. 
-  * Experience Replay: Uses a replay buffer to store experiences (state, action, reward, next state) and sample batches of experiences randomly for training. This helps to reduce correlation between consecutive samples and stabilize training. 
-  * Target Neural Network: Employs a target network, which is a copy of the prediction network with slightly delayed updates, to provide more stable training targets
+  * Training Neural Network: Takes state as input and outputs Q-values for all possible actions, where Q-value is the expected future cumulative reward the agent will receive by taking an action in a state and following the optimal policy from that point on. 
+  * Experience Replay Buffer: Stores experiences (state, action, reward, next state) and sample batches of experiences randomly for training. This helps to reduce correlation between consecutive samples and stabilize training. 
+  * Target Neural Network: Copy of the prediction network with slightly delayed updates, to provide more stable training targets
   * Optimizer: Minimizes the TD error between predicted Q-values and target Q-values.
   * Epsilon-Greedy Policy: Uses an ϵ-greedy policy (off-policy) to balance exploration (trying different actions) and exploitation (choosing the best action based on Q-values). 
 
