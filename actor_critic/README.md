@@ -1,5 +1,5 @@
 # Actor Critic
-A practical Proximal Policy Optimization(PPO) (one Actor Critic) reinforcement learning implementation and training for the CartPole-v1 environment.
+A practical Proximal Policy Optimization(PPO) (one Actor Critic) reinforcement learning (RL)implementation and training for the CartPole-v1 environment.
 
 Actor-critic methods in reinforcement learning combine two components: an actor that selects actions and a critic that evaluates the actor's actions. The actor learns a policy to maximize rewards, while the critic learns a value function to assess the quality of those actions. This approach addresses the limitations of purely policy-based (actor-only) or value-based (critic-only) methods. 
 PPO is an on-policy Actor-Critic RL algorithm that optimizes a policy (the “actor”) using a value function (the “critic”) while constraining policy updates to prevent large, unstable changes.
