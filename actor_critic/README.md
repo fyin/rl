@@ -16,10 +16,10 @@ All the required dependencies are put in requirements.txt.
 * Components
   * Policy network (Actor): Outputs action probabilities for given state.
   * Value network (Critic): Outputs value estimates for given state.
-  * Data collection: Follows the current policy to collect trajectories, stored in a buffer, which is used to compute loss for the policy and value network updates.
+  * Data collection: Follows the current policy to collect trajectories, stored in a buffer. Data is sampled from the buffer to compute loss for the policy and value network updates.
   * Advantage estimation: Quantifies how much better a specific action is compared to the average action taken in a given state.
-  * Clipped surrogate objective function: prevent overly large policy updates, ensuring that the new policy doesn't deviate too far from the previous one, which can improve training stability. The clipping mechanism limits the range of possible policy changes, essentially creating a "trust region" where the agent can explore without risking significant instability.
-  It uses a ratio between the probabilities of actions under the current and previous policies. This ratio is then multiplied by the advantage to obtain the surrogate objective function.
+  * Clipped surrogate objective function: Prevents overly large policy updates, ensuring that the new policy doesn't deviate too far from the previous one, which can improve training stability. The clipping mechanism limits the range of possible policy changes, essentially creating a "trust region" where the agent can explore without risking significant instability.
+  It uses a ratio between the probabilities of actions under the current and previous policies. This ratio is then multiplied by the advantage estimation to obtain the surrogate objective function.
   * Objective function: Policy network is updated by optimizing the clipped surrogate objective function, and value network is updated by minimizing the TD error.
 
 * Train Script Run 
